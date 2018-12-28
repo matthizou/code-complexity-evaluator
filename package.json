@@ -5,5 +5,8 @@
   "main": "index.js",
   "repository": "https://github.com/matthizou/code-complexity-evaluator.git",
   "author": "matthizou",
-  "license": "MIT"
+  "license": "MIT",
+  "bin": {
+    "eval-complexity": "./cli.js"
+  }
 }

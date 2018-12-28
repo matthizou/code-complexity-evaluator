@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const fs = require('fs')
 const pathLib = require('path')
 const { EOL } = require('os')
