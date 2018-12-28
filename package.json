@@ -1,0 +1,9 @@
+{
+  "name": "code-complexity-evaluator",
+  "version": "1.0.0",
+  "description": "Script that recursively inspects a folder structure and assesses the complexity of the files it contains",
+  "main": "index.js",
+  "repository": "https://github.com/matthizou/code-complexity-evaluator.git",
+  "author": "matthizou",
+  "license": "MIT"
+}
