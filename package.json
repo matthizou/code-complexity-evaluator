@@ -1,6 +1,6 @@
 {
   "name": "code-complexity-evaluator",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Script that recursively inspects a folder structure and assesses the complexity of the files it contains",
   "main": "index.js",
   "repository": "https://github.com/matthizou/code-complexity-evaluator.git",
@@ -8,5 +8,14 @@
   "license": "MIT",
   "bin": {
     "eval-complexity": "./cli.js"
+  },
+  "scripts": {
+    "start": "node cli"
+  },
+  "devDependencies": {
+    "eslint": "^5.11.1",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "prettier": "^1.15.3"
   }
 }

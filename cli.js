@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
-const fs = require('fs')
 const pathLib = require('path')
 const { EOL } = require('os')
 
-const { EXTENSIONS, getCodeComplexity } = require('./getCodeComplexity')
+const { getComplexityData } = require('./src/getComplexityData')
+const { EXTENSIONS } = require('./src/assessCodeComplexity')
+
+let supportedExtensions = [EXTENSIONS.COFFEESCRIPT, EXTENSIONS.HAML]
 
 //
 // Script that recursively inspects a folder structure and assesses the complexity of the files it contains
@@ -21,17 +23,8 @@ function displayHelp() {
   console.log('-e   extensions of the files that will by analysed')
 }
 
-const IGNORED_FOLDERS = [
-  'node_modules',
-  '.git',
-  'tmp',
-  'temp',
-  'public',
-  'bower_components',
-]
 let isDetailledAnalysis = false
 let rootFolder = process.cwd()
-let supportedExtensions = [EXTENSIONS.COFFEESCRIPT, EXTENSIONS.HAML]
 
 const args = process.argv.slice(2)
 if (args.includes('-h')) {
@@ -76,90 +69,12 @@ try {
   return false
 }
 
-function getComplexity(rootPath, withDetails = false) {
-  const cwd = process.cwd()
-  const rootFullPath = pathLib.resolve(cwd, rootPath)
-  let data = walkRecur(rootFullPath)
-  if (withDetails) {
-    const rootParentFullPath = pathLib.dirname(rootFullPath)
-    data = data.map(({ fullPath, ...rest }) => ({
-      ...rest,
-      path: fullPath.replace(rootParentFullPath, ''),
-    }))
-    data = data.map(item => JSON.stringify(item)).join(`,${EOL}  `)
-    data = `[${EOL}  ${data}${EOL}]`
-  } else {
-    data = data && data.length ? data[0].complexity : '0'
-  }
-  return data
-}
+const cwd = process.cwd()
+const rootFullPath = pathLib.resolve(cwd, rootFolder)
 
-let folderCounter = 1
-function walkRecur(fullPath, options, parentFolderId, results = []) {
-  try {
-    const stat = fs.statSync(fullPath)
-    const isDirectory = stat.isDirectory()
-    let name,
-      complexity,
-      folderId,
-      childrenComplexity = []
-
-    // DIRECTORY
-    if (isDirectory) {
-      name = pathLib.basename(fullPath)
-      if (IGNORED_FOLDERS.includes(name)) {
-        return results
-      }
-      folderId = folderCounter
-      folderCounter += 1
-      // Continue recursion
-      const children = fs.readdirSync(fullPath)
-
-      childrenComplexity = children
-        .map(childName =>
-          walkRecur(
-            pathLib.join(fullPath, childName),
-            options,
-            folderId,
-            results,
-          ),
-        )
-        // flatten
-        .reduce((res, val) => res.concat(val), [])
-
-      complexity = childrenComplexity
-        .filter(item => item.parentFolderId === folderId)
-        .reduce((total, item) => total + item.complexity, 0)
-    } else {
-      // FILE
-      const extension = pathLib.extname(fullPath).toLowerCase()
-      if (!supportedExtensions.includes(extension)) {
-        return results
-      }
-      name = pathLib.basename(fullPath)
-      const code = fs.readFileSync(fullPath, 'utf8')
-      complexity = getCodeComplexity(code, extension)
-    }
-    if (complexity === 0) {
-      return results
-    }
-
-    return [
-      ...results,
-      {
-        name,
-        parentFolderId,
-        folderId,
-        fullPath,
-        complexity,
-      },
-      ...childrenComplexity,
-    ]
-  } catch (ex) {
-    console.error(`walkRecur() error when processing: ${fullPath}`)
-    console.error(`${ex.message}`)
-    return
-  }
-}
-
-console.log(getComplexity(rootFolder, isDetailledAnalysis))
+console.log(
+  getComplexityData(rootFullPath, {
+    supportedExtensions,
+    withDetails: isDetailledAnalysis,
+  }),
+)

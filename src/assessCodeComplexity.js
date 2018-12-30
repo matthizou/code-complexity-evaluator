@@ -8,7 +8,7 @@ const EXTENSIONS = {
 
 const { COFFEESCRIPT, HAML, SNAPSHOT } = EXTENSIONS
 
-function getCodeComplexity(code, extension) {
+function assessCodeComplexity(code, extension) {
   switch (extension) {
     case COFFEESCRIPT:
       return getCoffeescriptComplexity(code)
@@ -47,6 +47,6 @@ function getNonEmptyLinesLength(code) {
 }
 
 module.exports = {
-  getCodeComplexity,
+  assessCodeComplexity,
   EXTENSIONS,
 }
