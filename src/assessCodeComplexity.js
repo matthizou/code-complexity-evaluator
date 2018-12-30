@@ -4,20 +4,22 @@ const EXTENSIONS = {
   COFFEESCRIPT: '.coffee',
   HAML: '.haml',
   SNAPSHOT: '.snap',
+  JAVASCRIPT: '.js',
+  JSX: '.jsx',
 }
 
-const { COFFEESCRIPT, HAML, SNAPSHOT } = EXTENSIONS
+const { COFFEESCRIPT, SNAPSHOT, JAVASCRIPT, JSX } = EXTENSIONS
 
 function assessCodeComplexity(code, extension) {
   switch (extension) {
     case COFFEESCRIPT:
       return getCoffeescriptComplexity(code)
+    case JAVASCRIPT:
     case SNAPSHOT:
-      return getSnapShotComplexity(code)
-    case HAML:
-      return getNonEmptyLinesLength(code)
+    case JSX:
+      return getJavascriptComplexity(code)
     default:
-      throw `getComplexity() - Unsupported extension:${extension}`
+      return getNonEmptyLinesLength(code)
   }
 }
 
@@ -32,7 +34,7 @@ function getCoffeescriptComplexity(code) {
   return significantLines.length
 }
 
-function getSnapShotComplexity(code) {
+function getJavascriptComplexity(code) {
   const ignoredCharactersRegex = /[\s\(\)\[\]<>//]/g // Characters: whitespace,{,},(,),[,],<,>,/
   const significantLines = code
     .split(EOL)
