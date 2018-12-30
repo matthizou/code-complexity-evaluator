@@ -51,10 +51,7 @@ function walkRecur(fullPath, options, parentFolderId, results = []) {
     } else {
       // FILE
       const extension = pathLib.extname(fullPath).toLowerCase()
-      if (
-        options.supportedExtensions &&
-        !options.supportedExtensions.includes(extension)
-      ) {
+      if (options.extensions && !options.extensions.includes(extension)) {
         return results
       }
       name = pathLib.basename(fullPath)

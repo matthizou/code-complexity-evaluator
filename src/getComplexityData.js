@@ -2,6 +2,13 @@ const pathLib = require('path')
 const { EOL } = require('os')
 const { walkRecur } = require('./walkRecur')
 
+/**
+ *
+ * @param {string} rootPath
+ * @param {Object} options
+ * @param {string[]} options.extensions
+ * @param {boolean} options.withDetails
+ */
 function getComplexityData(rootPath, options = {}) {
   let data = walkRecur(rootPath, options)
   if (options.withDetails) {

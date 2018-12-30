@@ -6,7 +6,7 @@ const { EOL } = require('os')
 const { getComplexityData } = require('./src/getComplexityData')
 const { EXTENSIONS } = require('./src/assessCodeComplexity')
 
-let supportedExtensions = [EXTENSIONS.COFFEESCRIPT, EXTENSIONS.HAML]
+let extensions = [EXTENSIONS.COFFEESCRIPT, EXTENSIONS.HAML]
 
 //
 // Script that recursively inspects a folder structure and assesses the complexity of the files it contains
@@ -52,7 +52,7 @@ try {
           rootFolder = getArgumentValue(arg)
           break
         case '-e':
-          supportedExtensions = getArgumentValue(arg)
+          extensions = getArgumentValue(arg)
             .split(',')
             .map(
               extension =>
@@ -74,7 +74,7 @@ const rootFullPath = pathLib.resolve(cwd, rootFolder)
 
 console.log(
   getComplexityData(rootFullPath, {
-    supportedExtensions,
+    extensions,
     withDetails: isDetailledAnalysis,
   }),
 )
