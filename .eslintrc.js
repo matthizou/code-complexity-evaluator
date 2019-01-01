@@ -4,14 +4,13 @@ module.exports = {
     node: true,
   },
   plugins: ['prettier'],
-  extends: 'eslint:recommended',
+  extends: ['eslint:recommended', 'prettier'],
   parserOptions: {
     ecmaVersion: 2018,
   },
   rules: {
     'no-console': 0,
     'linebreak-style': ['error', 'unix'],
-    quotes: ['error', 'single'],
     semi: ['error', 'never'],
     'prettier/prettier': [
       'error',
